@@ -112,15 +112,21 @@ export default function Dashboard() {
         {selectedRouteId && (
           <>
             <div className="section-title">Delay prediction</div>
-            <label htmlFor="predict-hour">Hour of day</label>
+            <label htmlFor="predict-hour">Time of day</label>
             <input
               id="predict-hour"
-              type="number"
-              min={0}
-              max={23}
-              value={predictHour}
-              onChange={(e) => setPredictHour(Number(e.target.value))}
-            />
+              type="time"
+              step="3600" // Hints to the browser to change increments by full hours
+              value={`${String(predictHour).padStart(2, "0")}:00`}
+              onChange={(e) => {
+                if (e.target.value) {
+                  // e.target.value will be a string like "14:30"
+                  // Split by ':' and parse the first element into an integer
+                  const hour = parseInt(e.target.value.split(":")[0], 10);
+                  setPredictHour(hour);
+                }
+              }}
+            />            
             {predict && (
               <div className="predict-box">
                 <div className="delay-value">
